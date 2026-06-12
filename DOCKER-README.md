@@ -1,60 +1,55 @@
-# Docker quick start
+# Docker setup
 
-This package is set up to run MRBS with Apache/PHP and MySQL using Docker Compose.
-
-## 1. Configure
-
-Copy the sample environment file and update the passwords:
+1. Copy the sample environment file and set strong passwords:
 
 ```bash
 cp .env.example .env
 ```
 
-Recommended production changes in `.env`:
-
-```env
-MYSQL_PASSWORD=use-a-strong-password
-MYSQL_ROOT_PASSWORD=use-a-different-strong-password
-MRBS_HTTP_PORT=8080
-MRBS_TIMEZONE=America/New_York
-```
-
-## 2. Start
-
-From the project root:
+2. Start the stack:
 
 ```bash
 docker compose up -d --build
 ```
 
-Open:
+3. Open the app:
 
-- MRBS: http://localhost:8080
-- phpMyAdmin: http://localhost:8888
-
-phpMyAdmin login uses the values from `.env`:
-
-- Server: `db`
-- Username: `MYSQL_USER`
-- Password: `MYSQL_PASSWORD`
-
-## 3. Stop
-
-```bash
-docker compose down
+```text
+http://localhost:8080
 ```
 
-## 4. Reset database
+phpMyAdmin is available at:
 
-This deletes the MySQL data volume and rebuilds the starting database from `tables.my.sql` and the seed files.
+```text
+http://localhost:8888
+```
+
+## What Docker creates
+
+The app container now checks the database on startup. If the MRBS tables do not exist, it imports `tables.my.sql` automatically and then loads the FDNY room seed file. Sample bookings are not loaded by default. Set this in `.env` to load them when the schema is first created:
+
+```env
+MRBS_LOAD_SAMPLE_BOOKINGS=1
+```
+
+## Passwords
+
+Database passwords are read from `.env`:
+
+```env
+MYSQL_PASSWORD=change-me-to-a-strong-password
+MYSQL_ROOT_PASSWORD=change-root-to-a-strong-password
+```
+
+The PHP MRBS config receives the database password through the Docker environment variable `MRBS_DB_PASSWORD`, which is mapped from `MYSQL_PASSWORD` in `docker-compose.yml`.
+
+## If you already started the old Docker version
+
+MySQL only initializes an empty database volume once. This version also checks for missing MRBS tables from the app container, but if you want a completely fresh database, run:
 
 ```bash
 docker compose down -v
 docker compose up -d --build
 ```
 
-## Notes
-
-- The new intake admin field tables are included in `tables.my.sql` for fresh Docker installs.
-- Existing installs are still protected by the PHP schema check in `web/event_requests.inc`, which creates missing intake tables automatically.
-- The app container uses `docker-config.inc.php`, which reads database settings from environment variables.
+Warning: `docker compose down -v` deletes the MySQL volume and all saved booking data.
