@@ -1,0 +1,9 @@
+.git
+.hg
+.svn
+node_modules
+vendor
+*.zip
+.env
+.DS_Store
+docker_app

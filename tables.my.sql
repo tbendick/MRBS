@@ -233,6 +233,47 @@ CREATE TABLE mrbs_event_request
   KEY idxEventRequestStart (requested_start)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE mrbs_event_request_field
+(
+  id           int NOT NULL auto_increment,
+  field_key    varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  label        varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  field_type   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'text' NOT NULL,
+  options      text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  help_text    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  is_required  tinyint DEFAULT 0 NOT NULL,
+  is_enabled   tinyint DEFAULT 1 NOT NULL,
+  sort_order   int DEFAULT 0 NOT NULL,
+  created_at   int NOT NULL COMMENT 'Unix timestamp',
+  updated_at   int NOT NULL COMMENT 'Unix timestamp',
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uqEventRequestFieldKey (field_key),
+  KEY idxEventRequestFieldEnabled (is_enabled, sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mrbs_event_request_field_value
+(
+  id          int NOT NULL auto_increment,
+  request_id  int NOT NULL,
+  field_id    int NOT NULL,
+  value       text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uqEventRequestFieldValue (request_id, field_id),
+  KEY idxEventRequestFieldValueRequest (request_id),
+  KEY idxEventRequestFieldValueField (field_id),
+  FOREIGN KEY (request_id)
+    REFERENCES mrbs_event_request(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (field_id)
+    REFERENCES mrbs_event_request_field(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 CREATE TABLE mrbs_room_editor
 (
   id          int NOT NULL auto_increment,
