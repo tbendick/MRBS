@@ -12,8 +12,8 @@ services:
       MRBS_DB_HOST: "db"
       MRBS_DB_DATABASE: "${MRBS_DB_DATABASE:-mrbs}"
       MRBS_DB_USER: "${MRBS_DB_USER:-mrbs}"
-      MRBS_DB_PASSWORD: "${MRBS_DB_PASSWORD:?Set MRBS_DB_PASSWORD in your .env file}"
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in your .env file}"
+      MRBS_DB_PASSWORD: "${MRBS_DB_PASSWORD:-mrbs12345}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root12345}"
       MRBS_DB_TBL_PREFIX: "${MRBS_DB_TBL_PREFIX:-mrbs_}"
       MRBS_LOAD_SAMPLE_BOOKINGS: "${MRBS_LOAD_SAMPLE_BOOKINGS:-0}"
     depends_on:
@@ -27,10 +27,14 @@ services:
     environment:
       MYSQL_DATABASE: "${MRBS_DB_DATABASE:-mrbs}"
       MYSQL_USER: "${MRBS_DB_USER:-mrbs}"
-      MYSQL_PASSWORD: "${MRBS_DB_PASSWORD:?Set MRBS_DB_PASSWORD in your .env file}"
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in your .env file}"
+      MYSQL_PASSWORD: "${MRBS_DB_PASSWORD:-mrbs12345}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root12345}"
+      MRBS_DB_DATABASE: "${MRBS_DB_DATABASE:-mrbs}"
+      MRBS_DB_USER: "${MRBS_DB_USER:-mrbs}"
+      MRBS_DB_PASSWORD: "${MRBS_DB_PASSWORD:-mrbs12345}"
     volumes:
       - mrbs_mysql_data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
       interval: 10s
@@ -46,7 +50,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_USER: "${MRBS_DB_USER:-mrbs}"
-      PMA_PASSWORD: "${MRBS_DB_PASSWORD:?Set MRBS_DB_PASSWORD in your .env file}"
+      PMA_PASSWORD: "${MRBS_DB_PASSWORD:-mrbs12345}"
     depends_on:
       db:
         condition: service_healthy

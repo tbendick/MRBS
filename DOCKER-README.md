@@ -78,3 +78,21 @@ MRBS_LOAD_SAMPLE_BOOKINGS=0
 ```
 
 For first testing, use simple passwords with no special characters. After it starts cleanly, change them to stronger values and redeploy with a fresh database volume if needed.
+
+## Portainer Environment Variables
+
+For production, set these in the Portainer stack environment variables:
+
+```env
+MRBS_DB_DATABASE=mrbs
+MRBS_DB_USER=mrbs
+MRBS_DB_PASSWORD=change-this-password
+MYSQL_ROOT_PASSWORD=change-this-root-password
+MRBS_HTTP_PORT=8080
+PHPMYADMIN_PORT=8888
+MRBS_TIMEZONE=America/New_York
+```
+
+If the app log stays at `Waiting for MySQL at db...` after changing passwords, remove the old `mrbs_mysql_data` volume and redeploy. MySQL only creates users/passwords on the first initialization of a new database volume.
+
+Version: 1.4.3
