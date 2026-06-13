@@ -1,22 +1,14 @@
 # MRBS Classroom Booking
 
-Current Version: 1.4.3
+Current Version: 1.4.4
+
+## 1.4.4
+- Changed Docker MySQL volume to `mrbs_mysql_data_v144` to avoid stale initialized volumes during testing.
+- Added `MYSQL_ROOT_HOST=%` so the app container can perform first-start database/user repair when needed.
+- Added clearer root-login diagnostics to the app startup script.
 
 ## 1.4.3
-- Improved Docker/MySQL startup reliability for Portainer.
-- Added MySQL first-run init script to create the MRBS database and user from environment variables.
-- Added clearer app-container log messages while waiting for MySQL.
-- Removed hard compose interpolation failures by providing safe local defaults; production passwords should still be set in Portainer.
+- Added MySQL init script and improved app startup logging.
 
 ## 1.4.2
-- Fixed Docker environment variable handling.
-- Added database/user verification during startup.
-- Added VERSION.md.
-
-## 1.4.1
-- Docker environment variable fix.
-
-## 1.4.0
-- Added Event Calendar report.
-- Added Event booking flag.
-- Added passed-event indicators.
+- Improved Docker database bootstrap and environment variable handling.

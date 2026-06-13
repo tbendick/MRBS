@@ -31,7 +31,11 @@ sql_escape() {
 
 ensure_db_with_root() {
   [ -n "${MYSQL_ROOT_PASSWORD}" ] || return 1
-  mysql "${mysql_root_args[@]}" -N -B -e "SELECT 1" >/dev/null 2>&1 || return 1
+  if ! mysql "${mysql_root_args[@]}" -N -B -e "SELECT 1" >/tmp/mrbs-root-login.out 2>&1; then
+    echo "Root connection failed from app container. If this is first install, remove old volumes and redeploy. Output:"
+    cat /tmp/mrbs-root-login.out || true
+    return 1
+  fi
 
   echo "Root connection succeeded. Ensuring MRBS database/user exist..."
   db_escaped="\`$(printf "%s" "${MRBS_DB_DATABASE}" | sed 's/`/``/g')\`"

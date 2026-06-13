@@ -96,3 +96,21 @@ MRBS_TIMEZONE=America/New_York
 If the app log stays at `Waiting for MySQL at db...` after changing passwords, remove the old `mrbs_mysql_data` volume and redeploy. MySQL only creates users/passwords on the first initialization of a new database volume.
 
 Version: 1.4.3
+
+
+## v1.4.4 Portainer clean install note
+
+This version uses the Docker volume `mrbs_mysql_data_v144`. This avoids reusing an older MySQL volume that may have been initialized before the MRBS database user/password existed.
+
+Required Portainer stack variables:
+
+```env
+MRBS_DB_DATABASE=mrbs
+MRBS_DB_USER=mrbs
+MRBS_DB_PASSWORD=mrbs12345
+MYSQL_ROOT_PASSWORD=root12345
+MRBS_HTTP_PORT=8080
+PHPMYADMIN_PORT=8888
+```
+
+If changing passwords later, delete the active MySQL volume before redeploying unless you are updating the MySQL user password manually.
