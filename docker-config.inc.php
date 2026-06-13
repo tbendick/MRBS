@@ -26,3 +26,10 @@ $db_persist = false;
 /* Add lines from systemdefaults.inc.php and areadefaults.inc.php below here
    to change the default configuration. Do _NOT_ modify systemdefaults.inc.php
    or areadefaults.inc.php.  */
+
+// Booking type used by the custom monthly event calendar/report.
+unset($booking_types);
+$booking_types[] = "I";
+$booking_types[] = "E";
+$booking_types[] = "V";
+$vocab_override["en"]["type.V"] = "Event";

@@ -53,3 +53,28 @@ docker compose up -d --build
 ```
 
 Warning: `docker compose down -v` deletes the MySQL volume and all saved booking data.
+
+
+## Version
+
+Current Docker package version: **1.4.2**
+
+## Required Portainer environment variables
+
+Use the same database password for `MRBS_DB_PASSWORD`; the app will use it to connect as the MRBS database user. `MYSQL_ROOT_PASSWORD` is also passed to the app container so first startup can create/check the database user and permissions.
+
+```env
+MRBS_HTTP_PORT=8080
+PHPMYADMIN_PORT=8888
+MRBS_TIMEZONE=America/New_York
+MRBS_DB_SYSTEM=mysql
+MRBS_DB_HOST=db
+MRBS_DB_DATABASE=mrbs
+MRBS_DB_USER=mrbs
+MRBS_DB_PASSWORD=mrbs12345
+MYSQL_ROOT_PASSWORD=root12345
+MRBS_DB_TBL_PREFIX=mrbs_
+MRBS_LOAD_SAMPLE_BOOKINGS=0
+```
+
+For first testing, use simple passwords with no special characters. After it starts cleanly, change them to stronger values and redeploy with a fresh database volume if needed.

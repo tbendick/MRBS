@@ -205,6 +205,7 @@ CREATE TABLE mrbs_event_request
   requested_start      int NOT NULL COMMENT 'Unix timestamp',
   requested_end        int NOT NULL COMMENT 'Unix timestamp',
   flexible_time        tinyint DEFAULT 0 NOT NULL,
+  is_calendar_event    tinyint DEFAULT 0 NOT NULL,
   quantity             int DEFAULT 0 NOT NULL,
   tech_needs           text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   setup_needs          text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -230,7 +231,8 @@ CREATE TABLE mrbs_event_request
   KEY idxEventRequestStatus (status),
   KEY idxEventRequestEmail (requester_email),
   KEY idxEventRequestCreatedBy (created_by_username),
-  KEY idxEventRequestStart (requested_start)
+  KEY idxEventRequestStart (requested_start),
+  KEY idxEventRequestCalendarEvent (is_calendar_event, requested_start)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE mrbs_event_request_field
